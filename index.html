@@ -4,102 +4,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>YAZY — 2 jugadores</title>
+<title>YAZYMV</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#F39C82">
 <style>
-  :root{ --bg:#F39C82; --board:#2F3943; --frame:#EDE4CE; --cell:#F4E2B2; --red:#F55E59; --green:#A8D4C4; --muted:#6B7A88; --text:#1f2937; }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;color:var(--text);
-       display:flex;align-items:center;justify-content:center}
-  .app{width:min(760px,94vw)}
-  .board{background:var(--board);border-radius:28px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .screen{background:var(--frame);border-radius:18px;padding:12px}
-  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .puck{background:#fff;border-radius:999px;padding:6px 10px;font-weight:800;color:#2b3540;box-shadow:0 2px 0 rgba(0,0,0,.15)}
-  .names{display:flex;gap:10px;justify-content:space-between;margin-bottom:8px}
-  .names input{flex:1 1 45%; padding:8px 10px; border-radius:12px; border:2px solid #d0d7df; font-weight:800}
-  table{width:100%;border-collapse:separate;border-spacing:0 10px}
-  th,td{border-radius:12px;padding:10px 10px}
-  th{font-size:0.95rem}
-  .col-cat{background:var(--cell);width:40%}
-  .col-red{background:var(--red);text-align:center;color:#fff;font-weight:900}
-  .col-green{background:var(--green);text-align:center;color:#1b2a26;font-weight:900}
-  .dice{display:flex;gap:8px;margin-top:8px}
-  .die{width:42px;height:42px;border-radius:10px;background:#fff;display:grid;place-items:center;cursor:pointer}
-  .die.held{outline:3px solid #ffd166}
-  .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:18px}
-  .tile{height:60px;background:#232c35;border-radius:14px;display:grid;place-items:center;
-        box-shadow:inset 0 0 0 2px #3a4652, 0 4px 0 rgba(0,0,0,.25);color:#fff;font-size:22px}
-  .row{display:flex;gap:10px;align-items:center;justify-content:center}
-  .btn{background:#fff;border:none;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
-  .muted{color:var(--muted);font-size:0.9rem}
-  /* Winner overlay */
-  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:10}
-  .modal{width:min(560px,92vw);background:#fff;border-radius:22px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.35);text-align:center;position:relative;overflow:hidden; animation:pop .25s ease-out}
-  .winName{font-size:2.1rem;font-weight:900;margin:0}
-  .winSub{color:#6b7280;font-size:1.05rem;margin:4px 0 12px 0}
-  .btnRow{display:flex;gap:10px;justify-content:center;margin-top:10px}
-  .confetti{position:absolute;inset:0;pointer-events:none}
-  @keyframes pop {0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+  body{margin:0;font-family:sans-serif;background:#f39c82;display:flex;justify-content:center;align-items:center;min-height:100vh}
+  .app{width:min(820px,96vw)}
+  h1{text-align:center;margin-bottom:10px;font-size:2rem;color:#2f3943}
+  .board{background:#2f3943;border-radius:20px;padding:15px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  .names{display:flex;gap:10px;margin-bottom:10px}
+  .names input{flex:1;padding:8px;border-radius:10px;border:2px solid #ddd;font-weight:bold}
+  .hud{display:flex;justify-content:space-between;margin-bottom:10px}
+  .dice{display:flex;gap:10px;justify-content:center;margin:10px 0}
+  .die{width:60px;height:60px;background:#fff;border-radius:12px;display:grid;place-items:center;position:relative;box-shadow:0 4px 6px rgba(0,0,0,.4);transition:transform .3s}
+  .die.held{outline:4px solid gold}
+  .pip{width:12px;height:12px;background:#000;border-radius:50%;position:absolute}
+  .row{display:flex;justify-content:center;gap:10px;margin-top:10px}
+  .btn{padding:8px 14px;border:none;border-radius:999px;font-weight:bold;cursor:pointer}
+  table{width:100%;margin-top:10px;border-collapse:collapse;background:#fff;color:#000}
+  th,td{padding:6px;border:1px solid #555;text-align:center}
+  th{background:#ddd}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:10}
+  .modal{background:#fff;border-radius:20px;padding:20px;text-align:center;animation:pop .4s ease}
+  .modal h2{font-size:2rem;margin:0;background:linear-gradient(45deg,#f39c82,#f55e59);-webkit-background-clip:text;color:transparent}
+  .modal p{margin:6px 0 12px;font-weight:bold}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  .shake{animation:shake .5s}
+  @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-5px)}100%{transform:translateX(0)}}
 </style>
 </head>
 <body>
-  <div class="app">
-    <div class="board">
-      <div class="hud">
-        <div class="puck">J1: <span id="score1">0</span></div>
-        <div class="puck">Tiradas: <span id="rolls">3</span></div>
-        <div class="puck">J2: <span id="score2">0</span></div>
-      </div>
-
-      <div class="screen">
-        <div class="names">
-          <input id="name1" type="text" placeholder="Nombre J1 (ej. Braulio)">
-          <input id="name2" type="text" placeholder="Nombre J2 (ej. Daniel)">
-        </div>
-
-        <table id="grid">
-          <thead><tr><th class="col-cat">Categoría</th><th class="col-red">J1</th><th class="col-green">J2</th></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-
-        <div class="dice" id="dice" aria-hidden="true"></div>
-
-        <div class="tiles"><div class="tile">★</div><div class="tile">★</div><div class="tile">★</div><div class="tile">★</div><div class="tile">★</div></div>
-
-        <div class="row" style="margin-top:10px">
-          <button class="btn" id="btnRoll">TIRAR</button>
-          <button class="btn" id="btnReset">DESMARCAR</button>
-          <button class="btn" id="btnNew">NUEVA</button>
-        </div>
-
-        <div class="row muted" style="margin-top:8px">Toca un número en la tabla para anotar el turno. Mantén dados tocándolos (arriba) — las estrellas son decorativas.</div>
-      </div>
+<div class="app">
+  <h1>YAZYMV</h1>
+  <div class="board">
+    <div class="names">
+      <input id="name1" placeholder="Nombre J1">
+      <input id="name2" placeholder="Nombre J2">
     </div>
-  </div>
-
-  <!-- Winner overlay -->
-  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="winTitle">
-    <div class="modal">
-      <canvas id="confetti" class="confetti"></canvas>
-      <h2 id="winName" class="winName">¡Ganador!</h2>
-      <div id="winSub" class="winSub"></div>
-      <div id="winScores" class="muted" style="margin-bottom:8px"></div>
-      <div class="btnRow">
-        <button class="btn" id="btnAgain">Jugar otra</button>
-        <button class="btn" id="btnClose">Cerrar</button>
-      </div>
+    <div class="hud">
+      <div>J1: <span id="score1">0</span></div>
+      <div>Tiradas: <span id="rolls">3</span></div>
+      <div>J2: <span id="score2">0</span></div>
     </div>
+    <div class="dice" id="dice"></div>
+    <div class="row">
+      <button class="btn" id="btnRoll">TIRAR</button>
+      <button class="btn" id="btnReset">DESMARCAR</button>
+      <button class="btn" id="btnNew">NUEVA</button>
+    </div>
+    <table><thead><tr><th>Categoría</th><th>J1</th><th>J2</th></tr></thead><tbody id="tbody"></tbody></table>
   </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <h2 id="winName"></h2>
+    <p id="winSub"></p>
+    <p id="winScores"></p>
+    <button class="btn" id="btnAgain">Jugar otra</button>
+  </div>
+</div>
+
+<audio id="sndRoll" src="roll.wav"></audio>
+<audio id="sndWin" src="win.wav"></audio>
 
 <script>
 const cats=["Unos","Doses","Treses","Cuatres","Cincos","Seises","3 de un tipo","4 de un tipo","Full House","Esc. pequeña","Esc. grande","Yatzy","Chance"];
 const UPPER_COUNT=6, UPPER_BONUS=35;
 let S={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:3,turn:0,sheet:[Array(cats.length).fill(null),Array(cats.length).fill(null)]};
 
-// Helpers
 function cnts(d){const c=[0,0,0,0,0,0,0]; d.forEach(v=>c[v]++); return c;}
 function sum(d){return d.reduce((a,b)=>a+b,0);}
 function score(cat,d){const c=cnts(d);
@@ -116,20 +89,33 @@ function score(cat,d){const c=cnts(d);
   } return 0;
 }
 function totals(p){
-  const row=S.sheet[p];
-  let upper=0; for(let i=0;i<UPPER_COUNT;i++) upper+=(row[i]??0);
-  const bonus=upper>=63?UPPER_BONUS:0;
-  let lower=0; for(let i=UPPER_COUNT;i<cats.length;i++) lower+=(row[i]??0);
+  const row=S.sheet[p]; let upper=0; for(let i=0;i<UPPER_COUNT;i++) upper+=(row[i]??0);
+  const bonus=upper>=63?UPPER_BONUS:0; let lower=0; for(let i=UPPER_COUNT;i<cats.length;i++) lower+=(row[i]??0);
   return {upper,bonus,lower,total:upper+bonus+lower};
 }
 
-// Render dice & interactions
 function renderDice(){
   const box=document.getElementById('dice'); box.innerHTML='';
   S.dice.forEach((v,i)=>{
     const d=document.createElement('div'); d.className='die'+(S.held[i]?' held':'');
-    d.textContent=v; d.onclick=()=>{ if(S.rolls<3){S.held[i]=!S.held[i]; renderDice();} };
+    d.onclick=()=>{ if(S.rolls<3){S.held[i]=!S.held[i]; renderDice();} };
+    drawPips(d,v);
     box.appendChild(d);
+  });
+}
+function drawPips(el,val){
+  el.innerHTML='';
+  const coords={
+    1:[[50,50]],
+    2:[[20,20],[80,80]],
+    3:[[20,20],[50,50],[80,80]],
+    4:[[20,20],[80,20],[20,80],[80,80]],
+    5:[[20,20],[80,20],[50,50],[20,80],[80,80]],
+    6:[[20,20],[80,20],[20,50],[80,50],[20,80],[80,80]]
+  };
+  coords[val].forEach(c=>{
+    const p=document.createElement('div'); p.className='pip'; p.style.left=c[0]*0.6-6+'px'; p.style.top=c[1]*0.6-6+'px';
+    el.appendChild(p);
   });
 }
 
@@ -137,17 +123,16 @@ function renderSheet(){
   const tb=document.getElementById('tbody'); tb.innerHTML='';
   for(let i=0;i<cats.length;i++){
     const tr=document.createElement('tr');
-    const tdCat=document.createElement('td'); tdCat.className='col-cat'; tdCat.textContent=cats[i]; tr.appendChild(tdCat);
+    const tdCat=document.createElement('td'); tdCat.textContent=cats[i]; tr.appendChild(tdCat);
     for(let p=0;p<2;p++){
-      const td=document.createElement('td'); td.className = p===0?'col-red':'col-green';
-      const val=S.sheet[p][i];
+      const td=document.createElement('td'); const val=S.sheet[p][i];
       if(val===null){
         if(p===S.turn && S.rolls<3){
           const pts=score(i,S.dice);
           td.textContent=pts; td.style.cursor='pointer';
           td.onclick=()=>{ S.sheet[p][i]=pts; endTurn(); };
-        }else{ td.textContent=''; }
-      }else{ td.textContent=val; }
+        }else td.textContent='';
+      } else td.textContent=val;
       tr.appendChild(td);
     }
     tb.appendChild(tr);
@@ -158,74 +143,46 @@ function renderSheet(){
 
 function roll(){
   if(S.rolls<=0) return;
-  for(let i=0;i<5;i++){ if(!S.held[i]) S.dice[i]=1+Math.floor(Math.random()*6); }
+  const snd=document.getElementById('sndRoll'); snd.currentTime=0; snd.play();
+  let t=0; const interval=setInterval(()=>{
+    for(let i=0;i<5;i++){ if(!S.held[i]) S.dice[i]=1+Math.floor(Math.random()*6); }
+    renderDice();
+    if(++t>6){clearInterval(interval);}
+  },100);
   S.rolls--; document.getElementById('rolls').textContent=S.rolls;
-  renderDice(); renderSheet();
-}
-function endTurn(){
-  if(S.sheet[0].every(v=>v!==null) && S.sheet[1].every(v=>v!==null)){ return finish(); }
-  S.turn=1-S.turn; S.rolls=3; document.getElementById('rolls').textContent=S.rolls;
-  S.held=[false,false,false,false,false];
-  renderDice(); renderSheet();
-}
-function newGame(){ S={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:3,turn:0,sheet:[Array(cats.length).fill(null),Array(cats.length).fill(null)]};
-  document.getElementById('rolls').textContent=S.rolls; renderDice(); renderSheet();
+  setTimeout(renderSheet,800);
 }
 
-// Winner overlay with custom messages
-const overlay=document.getElementById('overlay');
-const winName=document.getElementById('winName');
-const winSub=document.getElementById('winSub');
-const winScores=document.getElementById('winScores');
-const name1=document.getElementById('name1');
-const name2=document.getElementById('name2');
+function endTurn(){
+  if(S.sheet[0].every(v=>v!==null)&&S.sheet[1].every(v=>v!==null)){finish();return;}
+  S.turn=1-S.turn; S.rolls=3; document.getElementById('rolls').textContent=S.rolls; S.held=[false,false,false,false,false];
+  renderDice(); renderSheet();
+}
+function newGame(){ S={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:3,turn:0,sheet:[Array(cats.length).fill(null),Array(cats.length).fill(null)]}; document.getElementById('rolls').textContent=S.rolls; renderDice(); renderSheet(); }
 
 function finish(){
-  const t0=totals(0).total, t1=totals(1).total;
-  const n1=(name1.value||'J1'), n2=(name2.value||'J2');
-  let title='', sub='';
-  if (t0===t1){
-    title='¡Empate!'; sub='Buen juego 🎉';
-  } else if (t0>t1){
-    title=n1; sub='Eres la Mera Caca';
-  } else {
-    title=n2; sub='Te fuiste';
-  }
-  winName.textContent=title;
-  winSub.textContent=sub;
-  winScores.textContent=`Marcador final — ${n1}: ${t0} · ${n2}: ${t1}`;
-  showOverlay(); launchConfetti();
+  const t0=totals(0).total,t1=totals(1).total;
+  const n1=document.getElementById('name1').value||'J1';
+  const n2=document.getElementById('name2').value||'J2';
+  let title,sub;
+  if(t0===t1){title='¡Empate!';sub='';}
+  else if(t0>t1){title=n1;sub='Eres la Mera Caca';}
+  else{title=n2;sub='Te fuiste';}
+  document.getElementById('winName').textContent=title;
+  document.getElementById('winSub').textContent=sub;
+  document.getElementById('winScores').textContent=`Marcador final — ${n1}: ${t0} · ${n2}: ${t1}`;
+  document.getElementById('overlay').style.display='flex';
+  const modal=document.getElementById('modal'); modal.classList.add('shake');
+  setTimeout(()=>modal.classList.remove('shake'),600);
+  const snd=document.getElementById('sndWin'); snd.currentTime=0; snd.play();
 }
 
-function showOverlay(){ overlay.style.display='flex'; sizeC(); }
-function hideOverlay(){ overlay.style.display='none'; }
-document.getElementById('btnAgain').onclick=()=>{ hideOverlay(); newGame(); }
-document.getElementById('btnClose').onclick=()=>{ hideOverlay(); }
-
-// Confetti canvas
-const confetti=document.getElementById('confetti');
-const cx=confetti.getContext('2d');
-function sizeC(){ confetti.width=confetti.parentElement.clientWidth; confetti.height=confetti.parentElement.clientHeight; }
-let pieces=[];
-function launchConfetti(){
-  pieces=[]; sizeC();
-  for(let i=0;i<200;i++){
-    pieces.push({x:Math.random()*confetti.width,y:-10-Math.random()*200,vy:2+Math.random()*3,rx:Math.random()*6,size:6+Math.random()*10,color:`hsl(${Math.random()*360},90%,60%)`});
-  }
-  (function anim(){
-    cx.clearRect(0,0,confetti.width,confetti.height);
-    pieces.forEach(p=>{ p.y+=p.vy; p.rx+=0.1; cx.save(); cx.translate(p.x,p.y); cx.rotate(p.rx); cx.fillStyle=p.color; cx.fillRect(-p.size/2,-p.size/2,p.size,p.size); cx.restore(); });
-    if (overlay.style.display==='flex' && pieces.some(p=>p.y<confetti.height+20)) requestAnimationFrame(anim);
-  })();
-}
-
-// Events
 document.getElementById('btnRoll').onclick=roll;
 document.getElementById('btnReset').onclick=()=>{S.held=[false,false,false,false,false]; renderDice();};
 document.getElementById('btnNew').onclick=newGame;
+document.getElementById('btnAgain').onclick=()=>{document.getElementById('overlay').style.display='none'; newGame();};
 
 newGame();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 </script>
 </body>
 </html>
