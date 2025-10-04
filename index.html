@@ -69,8 +69,7 @@
 <audio id="sndWin" src="win.wav"></audio>
 
 <script>
-const cats=["Unos","Doses","Treses","Cuatres","Cincos","Seises","3 de un tipo","4 de un tipo","Full House","Esc. pequeña","Esc. grande","Yatzy","Chance"];
-const UPPER_COUNT=6, UPPER_BONUS=35;
+const cats=["Unos","Doses","Treses","Cuatros","Cincos","Seises","Tercia","Póker","Full House","Escalera","Quintilla"];
 let S={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:3,turn:0,sheet:[Array(cats.length).fill(null),Array(cats.length).fill(null)]};
 
 function cnts(d){const c=[0,0,0,0,0,0,0]; d.forEach(v=>c[v]++); return c;}
@@ -82,16 +81,13 @@ function score(cat,d){const c=cnts(d);
     case 6:{for(let v=1;v<=6;v++) if(c[v]>=3) return sum(d); return 0;}
     case 7:{for(let v=1;v<=6;v++) if(c[v]>=4) return sum(d); return 0;}
     case 8:return (c.some(x=>x===3)&&c.some(x=>x===2))?25:0;
-    case 9:{const set=new Set(d); for(const s of [[1,2,3,4],[2,3,4,5],[3,4,5,6]]) if(s.every(v=>set.has(v))) return 30; return 0;}
-    case 10:{const set=new Set(d); if([1,2,3,4,5].every(v=>set.has(v))||[2,3,4,5,6].every(v=>set.has(v))) return 40; return 0;}
-    case 11:{for(let v=1;v<=6;v++) if(c[v]===5) return 50; return 0;}
-    case 12:return sum(d);
+    case 9:{const set=new Set(d); if([1,2,3,4,5].every(v=>set.has(v))||[2,3,4,5,6].every(v=>set.has(v))) return 40; return 0;}
+    case 10:{for(let v=1;v<=6;v++) if(c[v]===5) return 50; return 0;}
   } return 0;
 }
 function totals(p){
-  const row=S.sheet[p]; let upper=0; for(let i=0;i<UPPER_COUNT;i++) upper+=(row[i]??0);
-  const bonus=upper>=63?UPPER_BONUS:0; let lower=0; for(let i=UPPER_COUNT;i<cats.length;i++) lower+=(row[i]??0);
-  return {upper,bonus,lower,total:upper+bonus+lower};
+  const row=S.sheet[p]; let total=0; for(let i=0;i<cats.length;i++) total+=(row[i]??0);
+  return {total};
 }
 
 function renderDice(){
